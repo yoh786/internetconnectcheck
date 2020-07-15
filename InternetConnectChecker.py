@@ -2,7 +2,10 @@
 import urllib.request
 import time
 
+gox = True
 x = True
+intentionallyDuplicitiveVar = ''
+currtime = ''
 
 def check_internet():
     try:
@@ -11,7 +14,19 @@ def check_internet():
     except:
         return False
 
-while x == True:
+print('is the internet on?')
+
+while gox == True:
     x = check_internet()
+    currtime = time.gmtime()
+
+    intentionallyDuplicitiveVar = str(x)
+
     print(x)
-    time.sleep(60)
+    print(time.asctime(currtime))
+    with open('results.txt', 'a') as a_writer:
+        a_writer.write(time.asctime(currtime) + '::')
+        a_writer.write(intentionallyDuplicitiveVar)
+        a_writer.write('\n--')
+
+    time.sleep(180)
