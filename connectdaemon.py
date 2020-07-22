@@ -25,15 +25,23 @@ def check_internet():
     except:
         return False
 
+def gpio_pin_switch():
+    try:
+        print("Restarting router")
+    except:
+        print("failed GPIO")
+
 def gpio_restart():
     try:
-        print("switch action and wait time")
+        gpio_pin_switch()
         time.sleep(timeforrestart)
-        #you will replace above with GPIO commands
+        #below is check for internet again
         if check_internet():
             print("Restart success. Internet is UP")
+            print(time.asctime(currtime))
         else:
             keepgoing = False
+            print(time.asctime(currtime))
             holup = input("something is wrong...")
     except:
         print("catastrophic failure")
