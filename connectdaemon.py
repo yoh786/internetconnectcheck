@@ -38,7 +38,7 @@ def gpio_restart():
         #below is check for internet again
         if check_internet():
             print("Restart success. Internet is UP")
-            print(time.asctime(currtime))
+            print(time.asctime(currtime)) #there is a bug here - printing start time.
         else:
             keepgoing = False
             print(time.asctime(currtime))
