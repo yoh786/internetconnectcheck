@@ -1,12 +1,12 @@
 import time
 import urllib.request
-#import RPi.GPIO as gpio
+#import RPi.GPIO as GPIO
 print("loaded. init vars and run")
 # init
 global keepgoing
 internet = True
-timewait = 10
-timeforrestart = 30
+timewait = 20
+timeforrestart = 40
 pin1 = 1
 pin2 = 2
 pin3 = 3
@@ -16,6 +16,16 @@ switch = ''
 checkurl = 'http://google.com'
 currtime = time.gmtime()
 
+GPIO.setmode(GPIO.BCM)
+
+
+GPIO.setup(pin1, GPIO.OUT)
+GPIO.setup(pin2, GPIO.OUT)
+GPIO.setup(pin3, GPIO.OUT)
+print("starting router")
+GPIO.output(pin1, GPIO.HIGH)
+GPIO.output(pin2, GPIO.HIGH)
+GPIO.output(pin3, GPIO.HIGH)
 
 # Functions
 def check_internet():
@@ -28,8 +38,16 @@ def check_internet():
 def gpio_pin_switch():
     try:
         print("Restarting router")
+        GPIO.output(pin1, GPIO.LOW)
+        GPIO.output(pin2, GPIO.LOW)
+        GPIO.output(pin3, GPIO.LOW)
+        time.sleep(10)
+        GPIO.output(pin1, GPIO.HIGH)
+        GPIO.output(pin2, GPIO.HIGH)
+        GPIO.output(pin3, GPIO.HIGH)
     except:
         print("failed GPIO")
+
 
 def gpio_restart():
     try:
@@ -38,9 +56,11 @@ def gpio_restart():
         #below is check for internet again
         if check_internet():
             print("Restart success. Internet is UP")
+            currtime = time.gmtime()
             print(time.asctime(currtime)) #there is a bug here - printing start time.
         else:
             keepgoing = False
+            currtime = time.gmtime()
             print(time.asctime(currtime))
             holup = input("something is wrong...")
     except:
@@ -68,4 +88,6 @@ def main_loop(t):
 
 print("starting loop")
 main_loop(timewait)
+print("closing GPIO")
+gpio.cleanup()
 print("ending")
