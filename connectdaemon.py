@@ -1,23 +1,24 @@
 import time
 import urllib.request
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 print("loaded. init vars and run")
 # init
 global keepgoing
 internet = True
 timewait = 20
 timeforrestart = 40
-pin1 = 1
-pin2 = 2
-pin3 = 3
+pin1 = 7
+pin2 = 11
+pin3 = 13
 pin4 = 4
 keepgoing = True
 switch = ''
 checkurl = 'http://google.com'
 currtime = time.gmtime()
 
-GPIO.setmode(GPIO.BCM)
 
+GPIO.setmode(GPIO.BOARD)
+GPIO.cleanup()
 
 GPIO.setup(pin1, GPIO.OUT)
 GPIO.setup(pin2, GPIO.OUT)
@@ -69,25 +70,28 @@ def gpio_restart():
 
 
 def main_loop(t):
-    while keepgoing:
-        currtime = time.gmtime()
-        print(time.asctime(currtime))
-        internet = check_internet()
+    try:
+        while keepgoing:
+            currtime = time.gmtime()
+            print(time.asctime(currtime))
+            internet = check_internet()
 
-        if internet:
-            print("UP\n.")
-            time.sleep(t)
-        else:
-            print("DOWN\n.")
-            gpio_restart()
-            print("resume monitoring")
-            time.sleep(t)
-
+            if internet:
+                print("UP\n.")
+                time.sleep(t)
+            else:
+                print("DOWN\n.")
+                gpio_restart()
+                print("resume monitoring")
+                time.sleep(t)
+            
+    except KeyboardInterrupt:
+        GPIO.cleanup()
 
 #program
 
 print("starting loop")
 main_loop(timewait)
 print("closing GPIO")
-gpio.cleanup()
+GPIO.cleanup()
 print("ending")
