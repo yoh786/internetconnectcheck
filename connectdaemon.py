@@ -4,15 +4,15 @@ import RPi.GPIO as GPIO
 print("loaded. init vars and run")
 # init
 global keepgoing
+global currtime
 internet = True
 timewait = 20
 timeforrestart = 40
-pin1 = 7
-pin2 = 11
-pin3 = 13
-pin4 = 4
+pin1 = 11
+pin2 = 15
+pin3 = 7
+pin4 = 13
 keepgoing = True
-switch = ''
 checkurl = 'http://google.com'
 currtime = time.gmtime()
 
@@ -22,11 +22,12 @@ GPIO.cleanup()
 
 GPIO.setup(pin1, GPIO.OUT)
 GPIO.setup(pin2, GPIO.OUT)
-GPIO.setup(pin3, GPIO.OUT)
-print("starting router")
-GPIO.output(pin1, GPIO.HIGH)
-GPIO.output(pin2, GPIO.HIGH)
-GPIO.output(pin3, GPIO.HIGH)
+print("prep switch")
+
+
+som = input("START? (press enter)")
+GPIO.output(pin1, False)
+GPIO.output(pin2, False)
 
 # Functions
 def check_internet():
@@ -39,13 +40,11 @@ def check_internet():
 def gpio_pin_switch():
     try:
         print("Restarting router")
-        GPIO.output(pin1, GPIO.LOW)
-        GPIO.output(pin2, GPIO.LOW)
-        GPIO.output(pin3, GPIO.LOW)
+        GPIO.output(pin1, True)
+        GPIO.output(pin2, True)
         time.sleep(10)
-        GPIO.output(pin1, GPIO.HIGH)
-        GPIO.output(pin2, GPIO.HIGH)
-        GPIO.output(pin3, GPIO.HIGH)
+        GPIO.output(pin1, False)
+        GPIO.output(pin2, False)
     except:
         print("failed GPIO")
 
@@ -63,9 +62,12 @@ def gpio_restart():
             keepgoing = False
             currtime = time.gmtime()
             print(time.asctime(currtime))
+            GPIO.cleanup()
             holup = input("something is wrong...")
+
     except:
         print("catastrophic failure")
+        GPIO.cleanup()
         holup = input("something is wrong...")
 
 
