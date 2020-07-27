@@ -2,6 +2,7 @@
 import urllib.request
 import time
 
+
 gox = True
 x = True
 intentionallyDuplicitiveVar = ''
@@ -25,7 +26,7 @@ while gox == True:
     print(x)
     print(time.asctime(currtime))
     with open('results.txt', 'a') as a_writer:
-        a_writer.write(time.asctime(currtime) + '::')
+        a_writer.write(time.asctime(currtime) + '::') #notice the second part to convert to a string that you can print
         a_writer.write(intentionallyDuplicitiveVar)
         a_writer.write('\n--')
 
