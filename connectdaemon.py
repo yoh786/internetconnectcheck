@@ -6,10 +6,10 @@ print("loaded. init vars and run")
 global keepgoing
 global currtime
 internet = True
-timewait = 20
-timeforrestart = 40
-pin1 = 11
-pin2 = 15
+timewait = 60
+timeforrestart = 300
+pin1 = 3
+pin2 = 5
 pin3 = 7
 pin4 = 13
 keepgoing = True
@@ -57,11 +57,13 @@ def gpio_restart():
         if check_internet():
             print("Restart success. Internet is UP")
             currtime = time.gmtime()
-            print(time.asctime(currtime)) #there is a bug here - printing start time.
+            print(time.asctime(currtime))
         else:
             keepgoing = False
             currtime = time.gmtime()
             print(time.asctime(currtime))
+            GPIO.output(pin1, True)
+            GPIO.output(pin2, True)
             GPIO.cleanup()
             holup = input("something is wrong...")
 
@@ -88,6 +90,8 @@ def main_loop(t):
                 time.sleep(t)
             
     except KeyboardInterrupt:
+        GPIO.output(pin1, True)
+        GPIO.output(pin2, True)
         GPIO.cleanup()
 
 #program
