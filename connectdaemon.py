@@ -1,6 +1,6 @@
 import time
 import urllib.request
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 print("loaded. init vars and run")
 # init
 global keepgoing
@@ -10,24 +10,17 @@ timewait = 60
 timeforrestart = 300
 pin1 = 3
 pin2 = 5
-pin3 = 7
-pin4 = 13
 keepgoing = True
 checkurl = 'http://google.com'
 currtime = time.gmtime()
 
+#INIT GPIO section
+#GPIO.setmode(GPIO.BOARD)
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.cleanup()
-
-GPIO.setup(pin1, GPIO.OUT)
-GPIO.setup(pin2, GPIO.OUT)
 print("prep switch")
 
 
 som = input("START? (press enter)")
-GPIO.output(pin1, False)
-GPIO.output(pin2, False)
 
 # Functions
 def check_internet():
@@ -40,14 +33,13 @@ def check_internet():
 def gpio_pin_switch():
     try:
         print("Restarting router")
-        GPIO.output(pin1, True)
-        GPIO.output(pin2, True)
-        time.sleep(10)
-        GPIO.output(pin1, False)
-        GPIO.output(pin2, False)
+
     except:
         print("failed GPIO")
 
+def gpio_cleanup():
+    #GPIO.cleanup()
+    print("cleanup")
 
 def gpio_restart():
     try:
@@ -62,14 +54,12 @@ def gpio_restart():
             keepgoing = False
             currtime = time.gmtime()
             print(time.asctime(currtime))
-            GPIO.output(pin1, True)
-            GPIO.output(pin2, True)
-            GPIO.cleanup()
+            gpio_cleanup()
             holup = input("something is wrong...")
 
     except:
         print("catastrophic failure")
-        GPIO.cleanup()
+        gpio_cleanup()
         holup = input("something is wrong...")
 
 
@@ -84,20 +74,27 @@ def main_loop(t):
                 print("UP\n.")
                 time.sleep(t)
             else:
-                print("DOWN\n.")
-                gpio_restart()
+                print('possibly down.. checking..')
+                doublecheck = False
+                time.sleep(40)
+                doublecheck = check_internet()
+#you might want to change below so the default safe option is actually to keep it on, for the ELSE
+                if doublecheck:
+                    print('possible false alarm')
+                else:
+                    print("DOWN\n.")
+                    gpio_restart()
+
                 print("resume monitoring")
                 time.sleep(t)
-            
+
     except KeyboardInterrupt:
-        GPIO.output(pin1, True)
-        GPIO.output(pin2, True)
-        GPIO.cleanup()
+        gpio_cleanup()
 
 #program
 
 print("starting loop")
 main_loop(timewait)
 print("closing GPIO")
-GPIO.cleanup()
+#GPIO.cleanup()
 print("ending")
