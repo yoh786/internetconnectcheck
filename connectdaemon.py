@@ -32,7 +32,7 @@ def gpio_pin_switch():
         print("Restarting router")
         GPIO.setup(3, GPIO.OUT)
         GPIO.setup(5, GPIO.OUT)
-        time.sleep(5)
+        time.sleep(15)
 
         GPIO.cleanup()
 
