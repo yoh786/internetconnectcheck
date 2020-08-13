@@ -1,6 +1,6 @@
 import time
 import urllib.request
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 print("loaded. init vars and run")
 # init
 global keepgoing
