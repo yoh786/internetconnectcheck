@@ -15,10 +15,6 @@ checkurl = 'http://google.com'
 currtime = time.gmtime()
 
 #INIT GPIO section
-#GPIO.setmode(GPIO.BOARD)
-
-print("prep switch")
-
 
 som = input("START? (press enter)")
 
@@ -32,13 +28,18 @@ def check_internet():
 
 def gpio_pin_switch():
     try:
+        GPIO.setmode(GPIO.BOARD)
         print("Restarting router")
+        GPIO.setup(pin1, GPIO.OUT)
+        GPIO.setup(pin2, GPIO.OUT)
+
+        GPIO.cleanup()
 
     except:
         print("failed GPIO")
 
 def gpio_cleanup():
-    #GPIO.cleanup()
+    GPIO.cleanup()
     print("cleanup")
 
 def gpio_restart():
@@ -96,5 +97,5 @@ def main_loop(t):
 print("starting loop")
 main_loop(timewait)
 print("closing GPIO")
-#GPIO.cleanup()
+GPIO.cleanup()
 print("ending")
