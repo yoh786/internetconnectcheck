@@ -30,8 +30,9 @@ def gpio_pin_switch():
     try:
         GPIO.setmode(GPIO.BOARD)
         print("Restarting router")
-        GPIO.setup(pin1, GPIO.OUT)
-        GPIO.setup(pin2, GPIO.OUT)
+        GPIO.setup(3, GPIO.OUT)
+        GPIO.setup(5, GPIO.OUT)
+        time.sleep(5)
 
         GPIO.cleanup()
 
